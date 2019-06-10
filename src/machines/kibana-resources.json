@@ -70,7 +70,7 @@
     "namespace": "[parameters('namespace')]",
     "subnetId": "[concat(resourceId(parameters('networkSettings').resourceGroup, 'Microsoft.Network/virtualNetworks', parameters('networkSettings').name), '/subnets/', parameters('networkSettings').subnet.name)]",
     "publicIpName": "[concat(variables('namespace'), '-ip')]",
-    "securityGroupName": "[concat(variables('namespace'), '-nsg')]",
+    "securityGroupName": "[parameters('nsg')]",
     "nicName": "[concat(variables('namespace'), '-nic')]",
     "password_osProfile": {
       "computername": "[parameters('namespace')]",
@@ -95,47 +95,6 @@
     "osProfile": "[variables(concat(parameters('credentials').authenticationType, '_osProfile'))]"
   },
   "resources": [
-    {
-      "apiVersion": "2017-10-01",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('securityGroupName')]",
-      "location": "[parameters('location')]",
-      "tags": {
-        "provider": "[toUpper(parameters('elasticTags').provider)]"
-      },
-      "properties": {
-        "securityRules": [
-          {
-            "name": "SSH",
-            "properties": {
-              "description": "Allows inbound SSH traffic from anyone",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('osSettings').managementPort]",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "Kibana",
-            "properties": {
-              "description": "Allows inbound Kibana HTTP traffic from anyone",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "5601",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 200,
-              "direction": "Inbound"
-            }
-          }
-        ]
-      }
-    },
     {
       "apiVersion": "2017-10-01",
       "type": "Microsoft.Network/networkInterfaces",
